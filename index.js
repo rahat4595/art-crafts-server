@@ -38,7 +38,11 @@ async function run() {
     const craftsCollection = client.db('craftDB').collection('crafts');
 
     // getting data from server
-    
+    app.get('/crafts', async(req, res) => {
+      const cursor = craftsCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
 
 
     // creating data to sever
