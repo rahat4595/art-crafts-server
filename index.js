@@ -46,7 +46,7 @@ async function run() {
       const newCraft = req.body;
       console.log(newCraft);
       const result = await craftsCollection.insertOne(newCraft);
-      res.send(result);
+      res.send(result)
     })
 
 
