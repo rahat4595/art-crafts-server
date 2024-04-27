@@ -38,32 +38,34 @@ async function run() {
     const craftsCollection = client.db('craftDB').collection('crafts');
 
     // getting data from server
-    app.get('/crafts', async(req, res) => {
+    app.get('/crafts', async (req, res) => {
       const cursor = craftsCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     })
 
-  // fetching data for view details page
-  app.get('/crafts/:id', async(req, res) => {
-    const id = req.params.id;
-    const query = {_id: new ObjectId(id)}
-    const result = await craftsCollection.findOne(query);
-    res.send(result);
-  })
+    // fetching data for view details page
+    app.get('/crafts/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await craftsCollection.findOne(query);
+      res.send(result);
+    })
 
 
-  // creating data for my list
-  app.get('/myList/:email', async(req, res) => {
-    console.log(req.params.email);
-    const result = await craftsCollection.find({ email:
-      req.params.email }).toArray();
-    res.send(result);
-  })
+    // creating data for my list
+    app.get('/myList/:email', async (req, res) => {
+      console.log(req.params.email);
+      const result = await craftsCollection.find({
+        email:
+          req.params.email
+      }).toArray();
+      res.send(result);
+    })
 
 
     // creating data to sever
-    app.post('/crafts', async(req, res)=>{
+    app.post('/crafts', async (req, res) => {
       const newCraft = req.body;
       console.log(newCraft);
       const result = await craftsCollection.insertOne(newCraft);
@@ -71,28 +73,36 @@ async function run() {
     })
 
     // updating a craft
-    app.put('/crafts/:id', async(req, res) => {
+    app.put('/crafts/:id', async (req, res) => {
       const id = req.params.id;
-      const filter = {_id: new ObjectId(id)}
+      const filter = { _id: new ObjectId(id) }
       const options = { upsert: true };
       const updateCraft = req.body;
       const craft = {
         $set: {
           item_name: updateCraft.item_name,
-           subcategory_Name: updateCraft.subcategory_Name,
-            price: updateCraft.price,
-             rating: updateCraft.rating,
-              short_Description: updateCraft.short_Description,
-               processing_time: updateCraft.processing_time,
-                customization: updateCraft.customization,
-                 stockStatus: updateCraft.stockStatus,
-                   photo: updateCraft.photo
+          subcategory_Name: updateCraft.subcategory_Name,
+          price: updateCraft.price,
+          rating: updateCraft.rating,
+          short_Description: updateCraft.short_Description,
+          processing_time: updateCraft.processing_time,
+          customization: updateCraft.customization,
+          stockStatus: updateCraft.stockStatus,
+          photo: updateCraft.photo
         }
       }
 
       const result = await craftsCollection.updateOne(filter, craft, options);
       res.send(result)
     })
+
+    // Delete a craft
+    app.delete('/crafts/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await craftsCollection.deleteOne(query);
+      res.send(result);
+    });
 
 
 
@@ -109,10 +119,10 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('Art and crafts server is running')
+  res.send('Art and crafts server is running')
 })
 
 app.listen(port, () => {
-    console.log(`Arts server is runnimg on port: ${port}`)
+  console.log(`Arts server is runnimg on port: ${port}`)
 })
 
