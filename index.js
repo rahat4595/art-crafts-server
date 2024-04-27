@@ -43,11 +43,19 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     })
-  //  view details page
+  // fetching data for view details page
   app.get('/crafts/:id', async(req, res) => {
     const id = req.params.id;
     const query = {_id: new ObjectId(id)}
     const result = await craftsCollection.findOne(query);
+    res.send(result);
+  })
+
+  // creating data for my list
+  app.get('/myList/:email', async(req, res) => {
+    console.log(req.params.email);
+    const result = await craftsCollection.find({ email:
+      req.params.email }).toArray();
     res.send(result);
   })
 
