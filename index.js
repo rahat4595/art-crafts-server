@@ -43,6 +43,7 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     })
+
   // fetching data for view details page
   app.get('/crafts/:id', async(req, res) => {
     const id = req.params.id;
@@ -50,6 +51,7 @@ async function run() {
     const result = await craftsCollection.findOne(query);
     res.send(result);
   })
+
 
   // creating data for my list
   app.get('/myList/:email', async(req, res) => {
@@ -65,6 +67,30 @@ async function run() {
       const newCraft = req.body;
       console.log(newCraft);
       const result = await craftsCollection.insertOne(newCraft);
+      res.send(result)
+    })
+
+    // updating a craft
+    app.put('/crafts/:id', async(req, res) => {
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)}
+      const options = { upsert: true };
+      const updateCraft = req.body;
+      const craft = {
+        $set: {
+          item_name: updateCraft.item_name,
+           subcategory_Name: updateCraft.subcategory_Name,
+            price: updateCraft.price,
+             rating: updateCraft.rating,
+              short_Description: updateCraft.short_Description,
+               processing_time: updateCraft.processing_time,
+                customization: updateCraft.customization,
+                 stockStatus: updateCraft.stockStatus,
+                   photo: updateCraft.photo
+        }
+      }
+
+      const result = await craftsCollection.updateOne(filter, craft, options);
       res.send(result)
     })
 
